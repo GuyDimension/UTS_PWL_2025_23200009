@@ -14,8 +14,7 @@ datasource db {
 model preorder {
   id  Int @id @default(autoincrement())
   order_date  DateTime
-  order_by  String
-  selected_package  String
-  qty Int
-  is_paid Boolean
+  order_by    String
+  selected_package String
+  qty         String
 }
