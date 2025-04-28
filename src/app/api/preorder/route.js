@@ -10,14 +10,17 @@ return new Response(JSON.stringify(data), { status: 200 });
 
 export async function POST(request) {
     const { order_date, order_by, selected_package, qty } = await request.json();
+    
     if (!order_date || !order_by || !selected_package || !qty) {
-    return new Response(JSON.stringify({ error: 'Semua field wajib diisi' }), {
-    status: 400,
-    });
+        return new Response(JSON.stringify({ error: 'Semua field wajib diisi' }), {
+         status: 400,
+        });
     }
+
     const preoder = await prisma.preorder.create({
-    data: { kode, nama },
+        data: { order_date, order_by, selected_package, qty },
     });
+    
     return new Response(JSON.stringify(preorder), { status: 201 });
 }
 
@@ -28,7 +31,7 @@ export async function PUT(request) {
 
     const preorder = await prisma.preorder.update({
         where: { id },
-        data: { kode, nama },
+        data: { order_date, order_by, selected_package, qty },
     });
 
     return Response.json(preoder); 
