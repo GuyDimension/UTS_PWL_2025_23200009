@@ -15,5 +15,6 @@ model preorder {
   order_date  DateTime
   order_by    String
   selected_package String
-  qty         String
+  qty         Int
+  is_paid     Boolean
 }
