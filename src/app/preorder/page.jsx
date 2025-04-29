@@ -27,10 +27,11 @@ export default function PreorderPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const method = editId ? 'PUT' : 'POST';
-        const res = await fetch('/api/preorder', {
+        const url = editId ? `/api/preorder/${editId}` : '/api/preorder';
+        const res = await fetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: editId, order_date, order_by, selected_package, qty }),
+            body: JSON.stringify({ order_date, order_by, selected_package, qty: Number(qty), status }),
         });
 
         if (res.ok) {
@@ -39,6 +40,7 @@ export default function PreorderPage() {
             setOrderBy('');
             setSelectedPackage('');
             setQty('');
+            setStatus('');
             setEditId(null);
             setFormVisible(false);
             fetchPreorders(); // refresh data
@@ -52,6 +54,7 @@ export default function PreorderPage() {
         setOrderBy(item.order_by);
         setSelectedPackage(item.selected_package);
         setQty(item.qty);
+        setStatus(item.status === "Lunas" ? "Lunas" : "Belum Lunas");
         setEditId(item.id);
         setFormVisible(true);
     };
@@ -59,7 +62,7 @@ export default function PreorderPage() {
     const handleDelete = async (id) => {
         if (!confirm('Yakin hapus data ini?')) return;
 
-        await fetch('/api/preorder', {
+        await fetch(`/api/preorder/${id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
@@ -118,7 +121,7 @@ export default function PreorderPage() {
                 <div className={styles.formGroup}>
                     <span>Jumlah</span>
                     <input
-                    type="text"
+                    type="number"
                     value={qty}
                     onChange={(e) => setQty(e.target.value)}
                     placeholder="Input Jumlah"
@@ -175,6 +178,7 @@ export default function PreorderPage() {
                             <td>{item.order_by}</td>
                             <td>{item.selected_package}</td>
                             <td>{item.qty}</td>
+                            <td>{item.status}</td>
                             <td>
                                 <button onClick={() => handleEdit(item)}>Edit</button>
                                 <button onClick={() => handleDelete(item.id)}>Hapus</button>
@@ -183,7 +187,7 @@ export default function PreorderPage() {
                     ))}
                     {preorders.length === 0 && (
                         <tr>
-                            <td colSpan="5">Belum ada data</td>
+                            <td colSpan="7">Belum ada data</td>
                         </tr>
                     )}
                 </tbody>
