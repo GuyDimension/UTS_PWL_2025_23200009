@@ -13,6 +13,7 @@ export default function PreorderPage() {
   const [status, setStatus ] = useState('');
   const [msg, setMsg ] = useState('');
   const [editId, setEditId] = useState(null);
+  const [pakets, setPakets] = useState([]);
 
   const fetchPreorders = async () => {
     const res = await fetch('/api/preorder');
@@ -20,8 +21,15 @@ export default function PreorderPage() {
     setPreorders(data);
     };
 
+    const fetchPakets = async () => {
+    const res = await fetch('/api/paket');
+    const data = await res.json();
+    setPakets(data);
+    };
+
     useEffect(() => {
         fetchPreorders();
+        fetchPakets();
     }, []);
 
     const handleSubmit = async (e) => {
@@ -111,11 +119,11 @@ export default function PreorderPage() {
                         required
                     >
                         <option value="">Pilih Paket</option>
-                        <option value="Paket 1">Paket 1</option>
-                        <option value="Paket 2">Paket 2</option>
-                        <option value="Paket 3">Paket 3</option>
-                        <option value="Paket 4">Paket 4</option>
-                        <option value="Paket 5">Paket 5</option>
+                        {pakets.map((item) => (
+                            <option key={item.id} value={item.selected_package}>
+                                {item.nama}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className={styles.formGroup}>
