@@ -1,76 +1,63 @@
 "use client";
-import styles from './PreorderPage.module.css';
+import styles from './CustomerPage.module.css';
 import { useEffect, useState } from 'react';
 
-export default function PreorderPage() {
+export default function PaketPage() {
 
   const [formVisible, setFormVisible] = useState(false);
-  const [preorders, setPreorders] = useState([]);
-  const [order_date, setOrderDate ] = useState('');
-  const [order_by, setOrderBy ] = useState('');
-  const [selected_package, setSelectedPackage ]= useState('');
-  const [qty, setQty ] = useState('');
-  const [status, setStatus ] = useState('');
+  const [customers, setCustomers] = useState([]);
+  const [name, setName ] = useState('');
+  const [phone, setPhone ] = useState('');
+  const [email, setEmail ]= useState('');
+//   const [createdAt, setCreatedAt]= useState('');
+  /*const [qty, setQty ] = useState('');
+  const [status, setStatus ] = useState('');*/
   const [msg, setMsg ] = useState('');
   const [editId, setEditId] = useState(null);
-  const [pakets, setPakets] = useState([]);
-  const [customers, setCustomers] = useState([]);
 
-  const fetchPreorders = async () => {
-    const res = await fetch('/api/preorder');
-    const data = await res.json();
-    setPreorders(data);
-    };
-
-    const fetchPakets = async () => {
-    const res = await fetch('/api/paket');
-    const data = await res.json();
-    setPakets(data);
-    };
-
-    const fetchCustomers = async () => {
+  const fetchCustomers = async () => {
     const res = await fetch('/api/customer');
     const data = await res.json();
     setCustomers(data);
     };
-    
+
     useEffect(() => {
-        fetchPreorders();
-        fetchPakets();
         fetchCustomers();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const method = editId ? 'PUT' : 'POST';
-        const url = editId ? `/api/preorder/${editId}` : '/api/preorder';
+        const url = editId ? `/api/customer/${editId}` : '/api/customer';
         const res = await fetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ order_date, order_by, selected_package, qty: Number(qty), status }),
+            body: JSON.stringify({ name, phone, email }),
         });
 
         if (res.ok) {
             setMsg('Berhasil disimpan');
-            setOrderDate('');
-            setOrderBy('');
-            setSelectedPackage('');
-            setQty('');
-            setStatus('');
+            setName('');
+            setPhone('');
+            setEmail('');
+            /*setCreatedAt('');
+            /*setQty('');
+            setStatus('');*/
             setEditId(null);
             setFormVisible(false);
-            fetchPreorders(); // refresh data
+            fetchCustomers(); // refresh data
         } else {
             setMsg('Gagal menyimpan data');
         }
     };
 
     const handleEdit = (item) => {
-        setOrderDate(item.order_date);
-        setOrderBy(item.order_by);
-        setSelectedPackage(item.selected_package);
-        setQty(item.qty);
-        setStatus(item.status === "Lunas" ? "Lunas" : "Belum Lunas");
+        setName(item.name);
+        setPhone(item.phone);
+        setEmail(item.email);
+        /*setCreatedAt(item.createdAt);*/
+        /*setQty(item.qty);
+        setStatus(item.status === "Lunas" ? "Lunas" : "Belum Lunas");*/
         setEditId(item.id);
         setFormVisible(true);
     };
@@ -78,13 +65,13 @@ export default function PreorderPage() {
     const handleDelete = async (id) => {
         if (!confirm('Yakin hapus data ini?')) return;
 
-        await fetch(`/api/preorder/${id}`, {
+        await fetch(`/api/customer/${id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
         });
 
-        fetchPreorders();
+        fetchCustomers();
     };
 
   return (
@@ -101,30 +88,26 @@ export default function PreorderPage() {
                 <h3>Input Data Baru</h3>
                 <form onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
-                    <span>Tanggal Pesanan</span>
+                    <span>Nama Pelanggan</span>
                     <input
-                    type="date"
-                    value={order_date}
-                    onChange={(e) => setOrderDate(e.target.value)}
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Masukkan Nama Pelanggan"
                     required
                     />
                 </div>
                 <div className={styles.formGroup}>
-                    <span>Nama Pemesan</span>
-                   <select 
-                        value={order_by}
-                        onChange={(e) => setOrderBy(e.target.value)}
-                        required
-                    >
-                        <option value="">Pilih Nama</option>
-                        {customers.map((item) => (
-                            <option key={item.id} value={item.order_by}>
-                                {item.name}
-                            </option>
-                        ))}
-                    </select>
+                    <span>Nomor Telepon</span>
+                    <input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Masukkan Nomor Telepon"
+                    required
+                    />
                 </div>
-                <div className={styles.formGroup}>
+                {/* <div className={styles.formGroup}>
                     <span>Paket</span>
                     <select 
                         value={selected_package}
@@ -132,24 +115,32 @@ export default function PreorderPage() {
                         required
                     >
                         <option value="">Pilih Paket</option>
-                        {pakets.map((item) => (
-                            <option key={item.id} value={item.selected_package}>
-                                {item.nama}
-                            </option>
-                        ))}
+                        <option value="Paket 1">Paket 1</option>
+                        <option value="Paket 2">Paket 2</option>
+                        <option value="Paket 3">Paket 3</option>
+                        <option value="Paket 4">Paket 4</option>
+                        <option value="Paket 5">Paket 5</option>
                     </select>
-                </div>
+                </div> */}
                 <div className={styles.formGroup}>
-                    <span>Jumlah</span>
-                    <input
-                    type="number"
-                    value={qty}
-                    onChange={(e) => setQty(e.target.value)}
-                    placeholder="Input Jumlah"
-                    required
+                    <span>Email</span>
+                    <textarea
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Input Email"
+                    /*style={{width: '100%', resize: 'vertical', minHeight: '100px'}}*/
                     />
                 </div>
-                <div className={styles.formGroup}>
+                {/* <div className={styles.formGroup}>
+                    <span>Tanggal Pembuatan</span>
+                    <input
+                    type="date"
+                    value={createdAt}
+                    onChange={(e) => setCreatedAt(e.target.value)}
+                    required
+                    />
+                </div> */}
+                {/*<div className={styles.formGroup}>
                     <span>Status</span>
                     <label>
                     <input
@@ -169,7 +160,7 @@ export default function PreorderPage() {
                     />
                     Belum Lunas
                 </label>
-                </div>
+                </div>*/}
                 <button type="submit">
                     Simpan
                 </button>
@@ -183,32 +174,38 @@ export default function PreorderPage() {
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th>Tanggal Pesanan</th>
-                    <th>Nama Pemesan</th>
-                    <th>Paket</th>
+                    <th>Nama Pelanggan</th>
+                    <th>Nomor Telepon</th>
+                    <th>Email</th>
+                    <th>Tanggal Pembuatan</th>
+                    {/*<th>Paket</th>
                     <th>Jumlah</th>
-                    <th>Status</th>
+                    <th>Status</th>*/}
                     <th>Aksi</th>
                 </tr>
                 </thead>
-                <tbody>
-                    {preorders.map((item, index) => (
+                <tbody style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    {customers.map((item, index) => (
                         <tr key={item.id}>
                             <td>{index + 1}</td>
-                            <td>{item.order_date}</td>
+                            <td>{item.name}</td>
+                            <td>{item.phone}</td>
+                            <td>{item.email}</td>
+                            <td>{item.createdAt}</td>
+                            {/*<td>{item.order_date}</td>
                             <td>{item.order_by}</td>
                             <td>{item.selected_package}</td>
                             <td>{item.qty}</td>
-                            <td>{item.status}</td>
+                            <td>{item.status}</td>*/}
                             <td>
                                 <button onClick={() => handleEdit(item)}>Edit</button>
                                 <button onClick={() => handleDelete(item.id)}>Hapus</button>
                             </td>
                         </tr>
                     ))}
-                    {preorders.length === 0 && (
+                    {customers.length === 0 && (
                         <tr>
-                            <td colSpan="7">Belum ada data</td>
+                            <td colSpan="6">Belum ada data</td>
                         </tr>
                     )}
                 </tbody>
