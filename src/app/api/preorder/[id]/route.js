@@ -5,13 +5,20 @@ export async function PUT(request, {params}) {
     const { order_date, order_by, selected_package, qty, status } = await request.json();
 
     if (!order_date || !order_by || !selected_package || !qty || !status ) {
-       return new Response(JSON.stringify({ error: 'Field kosong'}), {status: 400});
+       return new Response(JSON.stringify({ error: 'Field kosong'}), 
+       {status: 400});
     }
 
     const newOrderDate = new Date(order_date).toISOString();
 
     const is_paid = status === "Lunas";
 
+    const selectedPackageInt = parseInt(selected_package);
+    if (isNaN(selectedPackageInt)) {
+        return new Response(JSON.stringify({ error: 'Selected_package dalam bentuk angka' }), 
+        {status: 400});
+    }
+    
     const preorder = await prisma.preorder.update({
         where: { id: Number(id) },
         data: { order_date: newOrderDate, order_by, selected_package, qty, is_paid },

@@ -68,7 +68,7 @@ export default function PreorderPage() {
     const handleEdit = (item) => {
         setOrderDate(item.order_date);
         setOrderBy(item.order_by);
-        setSelectedPackage(item.selected_package);
+        setSelectedPackage(item.selected_package.toString());
         setQty(item.qty);
         setStatus(item.status === "Lunas" ? "Lunas" : "Belum Lunas");
         setEditId(item.id);
@@ -132,9 +132,9 @@ export default function PreorderPage() {
                         required
                     >
                         <option value="">Pilih Paket</option>
-                        {pakets.map((item) => (
-                            <option key={item.id} value={item.selected_package}>
-                                {item.nama}
+                        {pakets.map((paket) => (
+                            <option key={paket.id} value={paket.id}>
+                                {paket.nama}
                             </option>
                         ))}
                     </select>
@@ -197,7 +197,7 @@ export default function PreorderPage() {
                             <td>{index + 1}</td>
                             <td>{item.order_date}</td>
                             <td>{item.order_by}</td>
-                            <td>{item.selected_package}</td>
+                            <td>{item.selected_package || "Unknown"}</td>
                             <td>{item.qty}</td>
                             <td>{item.status}</td>
                             <td>
