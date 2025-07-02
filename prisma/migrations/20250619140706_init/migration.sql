@@ -2,7 +2,7 @@
 CREATE TABLE "preorder" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "order_date" DATETIME NOT NULL,
-    "order_by" TEXT NOT NULL,
+    "order_by" INTEGER NOT NULL,
     "selected_package" INTEGER NOT NULL,
     "qty" INTEGER NOT NULL,
     "is_paid" BOOLEAN NOT NULL,

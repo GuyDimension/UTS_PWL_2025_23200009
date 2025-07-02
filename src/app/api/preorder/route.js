@@ -2,7 +2,7 @@ import prisma from '@/lib/prisma';
 
 export async function GET() {
     const data = await prisma.preorder.findMany({
-        include: { paket: true },
+        include: { paket: true, customer: true },
         orderBy: { id: 'asc' },
     });
 
@@ -36,8 +36,19 @@ export async function POST(request) {
         {status: 400});
     }
 
+    const orderByInt = parseInt(order_by, 10);
+    if (isNaN(orderByInt)) {
+        return new Response(JSON.stringify({ error: 'order_by harus dalam bentuk angka yang valid' }),
+        {status: 400});
+    }
+    // const orderByInt = parseInt(order_by, 10);
+    // if (isNaN(orderByInt)) {
+    //     return new Response(JSON.stringify({ error: 'order_by tidak valid'}),
+    //     {status: 400});
+    // }
+
     const preorder = await prisma.preorder.create({
-        data: { order_date: newOrderDate, order_by, selected_package: selectedPackageInt, qty: parseInt(qty), is_paid },
+        data: { order_date: newOrderDate, order_by: orderByInt, selected_package: selectedPackageInt, qty: parseInt(qty), is_paid },
     });
     
     const newPreorder = {

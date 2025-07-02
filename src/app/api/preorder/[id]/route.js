@@ -19,9 +19,15 @@ export async function PUT(request, {params}) {
         {status: 400});
     }
     
+    const orderByInt = parseInt(order_by, 10);
+    if (isNaN(orderByInt)) {
+        return new Response(JSON.stringify({ error: 'order_by harus dalam bentuk angka yang valid' }),
+        {status: 400});
+    }
+
     const preorder = await prisma.preorder.update({
         where: { id: Number(id) },
-        data: { order_date: newOrderDate, order_by, selected_package, qty, is_paid },
+        data: { order_date: newOrderDate, order_by: orderByInt, selected_package: selectedPackageInt, qty, is_paid },
     });
 
     const viewPreorder = {
