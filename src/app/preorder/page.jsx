@@ -19,7 +19,13 @@ export default function PreorderPage() {
   const fetchPreorders = async () => {
     const res = await fetch('/api/preorder');
     const data = await res.json();
-    setPreorders(data);
+
+    const formatted = data.map((item) => ({
+        ...item,
+        status: item.is_paid ? "Lunas" : "Belum Lunas"
+    }));
+
+    setPreorders(formatted);
     };
 
     const fetchPakets = async () => {
@@ -66,11 +72,11 @@ export default function PreorderPage() {
     };
 
     const handleEdit = (item) => {
-        setOrderDate(item.order_date);
-        setOrderBy(item.order_by.toString());
+        setOrderDate(item.order_date.split('T')[0]);
+        setOrderBy(item.customer?.id || '');
         setSelectedPackage(item.selected_package.toString());
         setQty(item.qty);
-        setStatus(item.status === "Lunas" ? "Lunas" : "Belum Lunas");
+        setStatus(item.status);
         setEditId(item.id);
         setFormVisible(true);
     };
@@ -95,7 +101,8 @@ export default function PreorderPage() {
             onClick={() => setFormVisible(!formVisible)}>
             {formVisible ? 'Tutup Form' : 'Tambah Data'}
         </button>
-        
+        <button style={{ marginRight: '10px', float: 'right' }} onClick={() => window.location.href = '/customer'}>Menu Customer</button>
+        <button style={{ marginRight: '10px', float: 'right' }} onClick={() => window.location.href = '/paket'}>Menu Paket</button>
         {formVisible && (
             <div className={styles.formWrapper}>
                 <h3>Input Data Baru</h3>
@@ -192,13 +199,13 @@ export default function PreorderPage() {
                     <th>Aksi</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                     {preorders.map((item, index) => (
                         <tr key={item.id}>
                             <td>{index + 1}</td>
-                            <td>{item.order_date}</td>
-                            <td>{item.order_by || "Unknown"}</td>
-                            <td>{item.selected_package || "Unknown"}</td>
+                            <td>{item.order_date.split('T')[0]}</td>
+                            <td>{item.customer?.name || "Unknown"}</td>
+                            <td>{item.paket?.nama || "Unknown"}</td>
                             <td>{item.qty}</td>
                             <td>{item.status}</td>
                             <td>

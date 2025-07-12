@@ -13,6 +13,8 @@ export async function GET() {
         selected_package: item.selected_package,
         qty: item.qty,
         status: item.is_paid ? "Lunas" : "Belum Lunas",
+        customer: item.customer ? { id: item.customer.id, name: item.customer.name } : null,
+        paket: item.paket ? { id: item.paket.id, nama: item.paket.nama } : null,
     }));
 
     return new Response(JSON.stringify(viewData), { status: 200 });

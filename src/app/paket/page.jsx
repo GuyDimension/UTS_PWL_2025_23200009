@@ -79,7 +79,8 @@ export default function PaketPage() {
             onClick={() => setFormVisible(!formVisible)}>
             {formVisible ? 'Tutup Form' : 'Tambah Data'}
         </button>
-        
+        <button style={{ marginRight: '10px', float: 'right' }} onClick={() => window.location.href = '/customer'}>Menu Customer</button>
+        <button style={{ marginRight: '10px', float: 'right' }} onClick={() => window.location.href = '/preorder'}>Menu Preorder</button>
         {formVisible && (
             <div className={styles.formWrapper}>
                 <h3>Input Data Baru</h3>
