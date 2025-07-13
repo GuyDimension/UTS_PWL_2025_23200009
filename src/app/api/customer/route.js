@@ -10,7 +10,7 @@ export async function GET() {
         name: item.name,
         phone: item.phone,
         email: item.email,
-        createdAt: item.createdAt.toISOString().split('T')[0],
+        createdAt: item.createdAt,
         /*order_by: item.order_by,
         selected_package: item.selected_package,
         qty: item.qty,

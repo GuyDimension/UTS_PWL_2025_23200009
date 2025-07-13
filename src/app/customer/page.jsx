@@ -192,7 +192,7 @@ export default function PaketPage() {
                             <td>{item.name}</td>
                             <td>{item.phone}</td>
                             <td>{item.email}</td>
-                            <td>{item.createdAt}</td>
+                            <td>{new Date(item.createdAt).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}</td>
                             {/*<td>{item.order_date}</td>
                             <td>{item.order_by}</td>
                             <td>{item.selected_package}</td>
